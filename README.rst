@@ -175,3 +175,5 @@ Sample Usage -- Time Domain Simulation
     ## Simulate the systems (both linear and nonlinear).
     Y_lin = Time_Sims_nonlin.run_ODE(f_lin, a_in, C_d, D_d, 2*M, T = 15, dt = 0.01)
     Y_nonlin = Time_Sims_nonlin.run_ODE(f, a_in, C_d, D_d, 2*M, T = 15, dt = 0.01
+
+Additional examples can be found under notebooks.
