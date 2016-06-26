@@ -4,23 +4,20 @@ Created on Mon Mar  2 17:37:37 2015
 
 @author: gil
 @title: examples
-"""
-import Roots
-import Potapov
-import numpy as np
-import numpy.linalg as la
-import sympy as sp
-import matplotlib.pyplot as plt
-#import mpmath as mp ## for complex-valued plots
-from functions import double_up
-from functions import der
-from functions import Pade
-from functions import spatial_modes
-from functions import gcd_lst
-import matplotlib.patches as patches
-from sympy.utilities.autowrap import ufuncify
 
+"""
+#import mpmath as mp ## for complex-valued plots
+from .functions import double_up, der, Pade, spatial_modes, gcd_list
+from sympy.utilities.autowrap import ufuncify
+import matplotlib.patches as patches
+import matplotlib.pyplot as plt
 from decimal import Decimal
+import numpy.linalg as la
+import base as potapov
+import numpy as np
+import sympy as sp
+import roots
+
 
 def plot_all(L,dx,labels,colors,lw,name,*args):
     '''

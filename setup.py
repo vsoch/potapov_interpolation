@@ -1,13 +1,25 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
-setup(name='Potapov_interpolation',
+setup(
+   
+    # Application name:
+    name='potapov',
+
+    # Version number (initial):
     version='0.1',
     description='Treating feedback with delays in quantum systems',
-    url='https://github.com/tabakg/potapov_interpolation/',
+
+    # Author and contributors
     author='Gil Tabak',
     author_email='tabak.gil@gmail.com',
+
+    packages=find_packages(),
+
+    # Details
     license='GNU',
-    packages=['Potapov_Code'],
+    url='https://github.com/tabakg/potapov_interpolation',
+
+    # Dependencies
     install_requires=[
         'matplotlib',
         'sympy',
@@ -17,4 +29,6 @@ setup(name='Potapov_interpolation',
     dependency_links = [
         'git+git@github.com:mabuchilab/QNET.git#egg=QNET-1.4.1',
     ],
-      zip_safe=False)
+    zip_safe=False
+
+    )

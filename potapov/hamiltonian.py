@@ -6,26 +6,23 @@ Created on Mon Mar 31 2015
 @title: Hamiltonian.py
 """
 
-import Roots
-import Potapov
-import Time_Delay_Network
-import functions
-
-import numpy as np
-import numpy.linalg as la
-import sympy as sp
-import scipy.constants as consts
+from sympy.physics.quantum.operatorordering import *
+from sympy.physics.quantum.boson import *
+from qnet.algebra.circuit_algebra import *
+from sympy.physics.quantum import *
 from scipy.optimize import minimize
-
+import scipy.constants as consts
+import .time_delay_network
+import numpy.linalg as la
+import .base as potapov
+import numpy as np
+import sympy as sp
+import .functions
 import itertools
+import .roots
 import copy
 
 #from sympy.printing.theanocode import theano_function
-
-from sympy.physics.quantum import *
-from sympy.physics.quantum.boson import *
-from sympy.physics.quantum.operatorordering import *
-from qnet.algebra.circuit_algebra import *
 
 
 class Chi_nonlin():
@@ -228,7 +225,7 @@ class Hamiltonian():
                 Functions in x,y. The first becomes
                 minimized at a zero and the second is the gradient in x,y.
                 These functions are generated in
-                Time_Delay_Network.get_minimizing_function_z.
+                time_delay_network.get_minimizing_function_z.
 
             eps (optional [float]):
                 Desired precision for convergence.
@@ -622,7 +619,7 @@ class Hamiltonian():
                 approximation has been applied).
 
         TODO: replace the sine and cosine stuff with something nicer.
-        Maybe utilize the _get_real_imag_func method in Time_Delay_Network.
+        Maybe utilize the _get_real_imag_func method in time_delay_network.
 
         '''
         if type(freqs) in [float,long,int]:

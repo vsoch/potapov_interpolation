@@ -1,2 +1,5 @@
 sympy
 sphinxcontrib-napoleon
+matplotlib
+numpy
+git+git@github.com:mabuchilab/QNET.git#egg=QNET-1.4.1

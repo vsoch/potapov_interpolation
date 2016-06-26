@@ -25,12 +25,12 @@ Throughout we denote :math:`f_{frac} = f'/f`.
 I have also tried several optimizations and strategies for numerical stability.
 
 """
-import numpy as np
+from .functions import limit
 from itertools import chain
 from scipy import integrate
-import math
 import cmath as cm
-from functions import limit
+import numpy as np
+import math
 
 def Muller(x1,x2,x3,f,tol = 1e-12,N=400,verbose=False):
     '''

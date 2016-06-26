@@ -1,18 +1,15 @@
-import Potapov
-import Roots
-import Time_Delay_Network
-import functions
-import numpy as np
-import numpy.testing as testing
-import Time_Sims_nonlin
-import Hamiltonian
-
-import numpy as np
-import numpy.linalg as la
-from scipy.integrate import ode
 import scipy.constants as consts
-
+import numpy.testing as testing
+from scipy.integrate import ode
 import matplotlib.pyplot as plt
+import numpy.linalg as la
+import time_delay_network
+import time_sims_nonlin
+import base as potapov
+import hamiltonian
+import numpy as np
+import .functions
+import roots
 import time
 
 
@@ -26,7 +23,7 @@ def test_altered_delay_pert(plot=False,eps=1e-5):
     It also tests the corresponding perturbation in the frequencies.
 
     We assume that the refraction_index_func and the input delays into
-    the Time_Delay_Network have been adjusted so that refraction_index_func
+    the time_delay_network have been adjusted so that refraction_index_func
     is close to zero in the desired frequency range.
 
     There are several effects of the delays being different for different
@@ -47,15 +44,15 @@ def test_altered_delay_pert(plot=False,eps=1e-5):
     were commensurate.
     '''
 
-    Ex = Time_Delay_Network.Example3( max_linewidth=15.,max_freq=500.)
+    Ex = time_delay_network.Example3( max_linewidth=15.,max_freq=500.)
     Ex.run_Potapov(commensurate_roots=True)
     modes = Ex.spatial_modes
     A,B,C,D = Ex.get_Potapov_ABCD(doubled=False)
-    ham = Hamiltonian.Hamiltonian(Ex.roots,modes,Ex.delays,Omega=-1j*A,
+    ham = hamiltonian.hamiltonian(Ex.roots,modes,Ex.delays,Omega=-1j*A,
                 nonlin_coeff = 1.)
 
     ## This nonlinearity will depend on the frequency.
-    chi_nonlin_test = Hamiltonian.Chi_nonlin(delay_indices=[0],start_nonlin=0,
+    chi_nonlin_test = hamiltonian.Chi_nonlin(delay_indices=[0],start_nonlin=0,
                                length_nonlin=0.1*consts.c)
     chi_nonlin_test.refraction_index_func = lambda freq, pol: 1. + abs(freq / (5000*np.pi))
     ham.chi_nonlinearities.append(chi_nonlin_test)
@@ -88,14 +85,14 @@ def test_altered_delay_pert(plot=False,eps=1e-5):
 #     It also tests the corresponding perturbation in the frequencies.
 #     '''
 #
-#     Ex = Time_Delay_Network.Example3( max_linewidth=15.,max_freq=30.)
+#     Ex = time_delay_network.Example3( max_linewidth=15.,max_freq=30.)
 #     Ex.run_Potapov(commensurate_roots=True)
 #     modes = Ex.spatial_modes
 #     M = len(Ex.roots)
 #
 #     A,B,C,D = Ex.get_Potapov_ABCD(doubled=False)
 #
-#     ham = Hamiltonian.Hamiltonian(Ex.roots,modes,Ex.delays,Omega=-1j*A,
+#     ham = hamiltonian.hamiltonian(Ex.roots,modes,Ex.delays,Omega=-1j*A,
 #                 nonlin_coeff = 0.)
 #
 #     ham.make_chi_nonlinearity(delay_indices=[0],start_nonlin=0,
@@ -124,7 +121,7 @@ def test_altered_delay_pert(plot=False,eps=1e-5):
 
 
 # def test_make_T_denom_sym_separate_delays():
-#     X = Time_Delay_Network.Example3(tau1 = 0.1, tau2 = 0.2,tau3 = 0.1,tau4 = 0.2,)
+#     X = time_delay_network.Example3(tau1 = 0.1, tau2 = 0.2,tau3 = 0.1,tau4 = 0.2,)
 #     X.get_symbolic_frequency_perturbation(simplify = False)  ## symbolic expr
 #     X.make_commensurate_roots([(-100,100)])
 #     M = len(X.delays)
@@ -133,7 +130,7 @@ def test_altered_delay_pert(plot=False,eps=1e-5):
 
 # def test_commensurate_vecs_example_3():
 #     times = [time.clock()]
-#     X = Time_Delay_Network.Example3(tau1 = 0.1, tau2 = 0.2,tau3 = 0.1,tau4 = 0.2,)
+#     X = time_delay_network.Example3(tau1 = 0.1, tau2 = 0.2,tau3 = 0.1,tau4 = 0.2,)
 #     times.append(time.clock())
 #     X.make_commensurate_roots([(-60000,60000)])
 #     times.append(time.clock())
@@ -154,7 +151,7 @@ def test_altered_delay_pert(plot=False,eps=1e-5):
     #print [times[i+1]-times[i] for i in range(len(times)-1)]
 
 # def test_example_3():
-#     Ex = Time_Delay_Network.Example3()
+#     Ex = time_delay_network.Example3()
 #     Ex.run_Potapov()
 #     E = Ex.E
 #     roots = Ex.roots
@@ -165,20 +162,20 @@ def test_altered_delay_pert(plot=False,eps=1e-5):
 #     assert( len(roots) == 11)
 
 #
-# def test_Hamiltonian_with_doubled_equations(eps=1e-5):
+# def test_hamiltonian_with_doubled_equations(eps=1e-5):
 #     '''
-#     This method tests various methods in Hamiltonian and Time_Sims_nonlin.
+#     This method tests various methods in hamiltonian and time_sims_nonlin.
 #     In particular, we compare the output from the classical equations of motion
-#     that results directly from the ABCD model versus the classical Hamiltonian
+#     that results directly from the ABCD model versus the classical hamiltonian
 #     equations of motion when we set the coefficient of the nonlinearity to zero.
 #
-#     This method will NOT test the details of the nonlinear Hamiltonian.
+#     This method will NOT test the details of the nonlinear hamiltonian.
 #
 #     Args:
 #         eps[optional(float)]: how closely each point in time along the two
 #         tested trajectories should match.
 #     '''
-#     Ex = Time_Delay_Network.Example3(r1 = 0.9, r3 = 0.9, max_linewidth=15.,max_freq=20.)
+#     Ex = time_delay_network.Example3(r1 = 0.9, r3 = 0.9, max_linewidth=15.,max_freq=20.)
 #     Ex.run_Potapov()
 #     modes = Ex.spatial_modes
 #     M = len(Ex.roots)
@@ -186,7 +183,7 @@ def test_altered_delay_pert(plot=False,eps=1e-5):
 #     A,B,C,D = Ex.get_Potapov_ABCD(doubled=False)
 #     A_d,B_d,C_d,D_d = Ex.get_Potapov_ABCD(doubled=True)
 #
-#     ham = Hamiltonian.Hamiltonian(Ex.roots,modes,Ex.delays,Omega=-1j*A,
+#     ham = hamiltonian.hamiltonian(Ex.roots,modes,Ex.delays,Omega=-1j*A,
 #                 nonlin_coeff = 0.)
 #
 #     ham.make_chi_nonlinearity(delay_indices=0,start_nonlin=0,
@@ -197,11 +194,11 @@ def test_altered_delay_pert(plot=False,eps=1e-5):
 #     a_in = lambda t: np.asmatrix([1.]*np.shape(D_d)[-1]).T  ## make a sample input function
 #
 #     ## find f for the linear and nonlinear systems
-#     f = Time_Sims_nonlin.make_f(eq_mot,B_d,a_in)
-#     f_lin = Time_Sims_nonlin.make_f_lin(A_d,B_d,a_in)
+#     f = time_sims_nonlin.make_f(eq_mot,B_d,a_in)
+#     f_lin = time_sims_nonlin.make_f_lin(A_d,B_d,a_in)
 #
-#     Y_lin = Time_Sims_nonlin.run_ODE(f_lin, a_in, C_d, D_d, 2*M, T = 15, dt = 0.01)  ## select f here.
-#     Y_nonlin = Time_Sims_nonlin.run_ODE(f, a_in, C_d, D_d, 2*M, T = 15, dt = 0.01)  ## select f here.
+#     Y_lin = time_sims_nonlin.run_ODE(f_lin, a_in, C_d, D_d, 2*M, T = 15, dt = 0.01)  ## select f here.
+#     Y_nonlin = time_sims_nonlin.run_ODE(f, a_in, C_d, D_d, 2*M, T = 15, dt = 0.01)  ## select f here.
 #     for y_lin,y_nonlin in zip(Y_lin,Y_nonlin):
 #         assert abs(sum(y_lin - y_nonlin)) < eps
 #
@@ -289,7 +286,7 @@ def test_altered_delay_pert(plot=False,eps=1e-5):
 #         [-5.,-4.,-3.,-2.,-1.,-0.,1.,2.,3.,4.,5.] )
 #
 # def test_example_1():
-#     Ex = Time_Delay_Network.Example1()
+#     Ex = time_delay_network.Example1()
 #     Ex.run_Potapov()
 #     E = Ex.E
 #     roots = Ex.roots
@@ -299,7 +296,7 @@ def test_altered_delay_pert(plot=False,eps=1e-5):
 #     assert( len(roots) == 3)
 #
 # def test_example_2():
-#     Ex = Time_Delay_Network.Example2()
+#     Ex = time_delay_network.Example2()
 #     Ex.run_Potapov()
 #     E = Ex.E
 #     roots = Ex.roots
@@ -309,7 +306,7 @@ def test_altered_delay_pert(plot=False,eps=1e-5):
 #     assert( len(roots) == 7)
 #
 # def test_example_3():
-#     Ex = Time_Delay_Network.Example3()
+#     Ex = time_delay_network.Example3()
 #     Ex.run_Potapov()
 #     E = Ex.E
 #     roots = Ex.roots
@@ -319,7 +316,7 @@ def test_altered_delay_pert(plot=False,eps=1e-5):
 #     assert( len(roots) == 11)
 #
 # def test_example_4():
-#     Ex = Time_Delay_Network.Example4()
+#     Ex = time_delay_network.Example4()
 #     Ex.run_Potapov()
 #     E = Ex.E
 #     roots = Ex.roots
@@ -329,7 +326,7 @@ def test_altered_delay_pert(plot=False,eps=1e-5):
 #     assert( len(roots) == 8)
 #
 # def test_commensurate_roots_example_3():
-#     X = Time_Delay_Network.Example3()
+#     X = time_delay_network.Example3()
 #     X.make_commensurate_roots()
 #     assert(len(X.roots) == 0)
 #     X.make_commensurate_roots([(0,1000)])
@@ -345,5 +342,5 @@ def test_altered_delay_pert(plot=False,eps=1e-5):
 if __name__ == "__main__":
     test_altered_delay_pert(plot=True)
     #test_make_T_denom_sym_separate_delays()
-    #test_Hamiltonian_with_doubled_equations()
+    #test_hamiltonian_with_doubled_equations()
     #test_example_3()

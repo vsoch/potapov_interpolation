@@ -9,11 +9,12 @@ Functions used by other files.
 
 """
 
-import numpy as np
-import numpy.linalg as la
 
 import scipy.constants as consts
+import numpy.linalg as la
 from fractions import gcd
+import numpy as np
+
 
 def gcd_lst(lst):
     l = len(lst)

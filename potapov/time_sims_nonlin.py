@@ -6,11 +6,11 @@ Created on Mon Mar 31 2015
 @title: Time_Sims_Nonlin.py
 """
 
-import Roots
-import Potapov
-import Time_Delay_Network
-import functions
-import Hamiltonian
+import .roots
+import .base as potapov
+import .time_delay_network
+import .functions
+import .hamiltonian
 
 import numpy as np
 import numpy.linalg as la

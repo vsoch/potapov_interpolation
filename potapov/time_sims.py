@@ -9,10 +9,11 @@ Created on Mon Mar  2 15:52:32 2015
 #example for using ODE library
 
 from scipy.integrate import ode
-import numpy as np
 import matplotlib.pyplot as plt
-import Time_Delay_Network
-import Potapov
+import time_delay_network
+import base as potopov
+import numpy as np
+
 
 def time_sim(Example, omega = 0., t1=150, dt=0.05, freq=None,
                 port_in = 0, port_out = [0,1], kind='FP',
@@ -28,7 +29,7 @@ def time_sim(Example, omega = 0., t1=150, dt=0.05, freq=None,
     T,T_testing,poles,vecs = E.get_outputs()
     print "number of poles is ", len(poles)
     num = len(poles)
-    [A,B,C,D] = Potapov.get_Potapov_ABCD(poles,vecs)
+    [A,B,C,D] = base.get_Potapov_ABCD(poles,vecs)
 
     y0 = np.matrix([[0]]*A.shape[1])
     t0 = 0
